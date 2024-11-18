@@ -60,6 +60,9 @@ for num, proj in enumerate(projects):
         continue
 
     try:
+        # write page.text to a text file
+        with open(f'{proj}.txt', 'w') as file:
+            file.write(page.text)
         # soup object
         soup = BeautifulSoup(page.text, 'html.parser')
 

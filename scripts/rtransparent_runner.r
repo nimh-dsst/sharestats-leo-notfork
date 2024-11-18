@@ -1,4 +1,4 @@
-repo_base <- file.path(getwd(), "data/")
+repo_base <- file.path(getwd(), "2024_all_ics/")
 
 # loads
 library(rtransparent)
@@ -18,7 +18,7 @@ get_indicators <- function(file) {
       data_code$article <- ID
       # remove TXT file
       file.remove(txtfile)
-  
+
       # return the indicators
       return(c(data_code))
     },
@@ -43,11 +43,10 @@ infiles <- dir(pattern = "\\.pdf$")
 cl <- makeCluster(num_cores)
 clusterExport(cl, "infiles")
 clusterEvalQ(cl, {
-    library(httr)
-    library(rtransparent)
-    library(stringr)
-  }
-)
+  library(httr)
+  library(rtransparent)
+  library(stringr)
+})
 
 # run in serial with "lapply" OR parallel with "parLapply"
 # biglist <- lapply(Filter(function(x) !is.na(x), csvtable$PMID), get_indicators_pmc)
@@ -72,18 +71,18 @@ rtransdata <- Filter(function(x) !is.null(x), biglist)
 stopCluster(cl)
 # save out final CSV
 write.table(
-    rtransdata[[1]][!grepl("_[0-9]+$|^fund$|^project$", names(rtransdata[[1]]))],
+  rtransdata[[1]][!grepl("_[0-9]+$|^fund$|^project$", names(rtransdata[[1]]))],
+  file = str_c(repo_base, "data_code_rtransparent.csv"),
+  sep = ",",
+  row.names = FALSE
+)
+for (i in 2:length(rtransdata)) {
+  write.table(
+    rtransdata[[i]][!grepl("_[0-9]+$|^fund$|^project$", names(rtransdata[[i]]))],
     file = str_c(repo_base, "data_code_rtransparent.csv"),
     sep = ",",
-    row.names = FALSE
-    )
-for(i in 2:length(rtransdata)) {
-    write.table(
-        rtransdata[[i]][!grepl("_[0-9]+$|^fund$|^project$", names(rtransdata[[i]]))],
-        file = str_c(repo_base, "data_code_rtransparent.csv"),
-        sep = ",",
-        col.names = FALSE,
-        row.names = FALSE,
-        append = TRUE
-        )
+    col.names = FALSE,
+    row.names = FALSE,
+    append = TRUE
+  )
 }

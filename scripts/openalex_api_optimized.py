@@ -43,7 +43,7 @@ def process_pmid(pmid):
         url = pmid_url.format(pmid)
     while retries < max_retries:
         try:
-            response = requests.get(url, headers=headers)
+            response = requests.get(url, headers=headers, verify=False)
             if response.status_code == 200:
                 json_data = response.json()
                 json_line = json.dumps(json_data) + "\n"

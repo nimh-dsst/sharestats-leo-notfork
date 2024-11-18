@@ -1,4 +1,4 @@
-repo_base <- file.path(getwd(), "data/")
+repo_base <- file.path(getwd(), "delme_data/")
 
 # Loads required libraries
 library(rtransparent)
