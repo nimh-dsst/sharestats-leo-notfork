@@ -57,6 +57,12 @@
 - For each unique PubMed ID, it uses the Metapub library to fetch additional details, including the article title and journal.
 - If an error occurs during the fetch process, the program records the PubMed ID and assigns empty strings to title and journal.
 
+## filter_cli.py
+
+- Takes an input directory and parses all *.pdf files in specified directory.
+- Take an output CSV filepath and generates a table of pdf metadata and whether the PDF document contains the phrase "HHS Public Access" on the first page of the PDF. NOTE: the HHS public access versions of manuscripts  have "Antenna House" in the producer metadata for the test set. The creater metadata references either "Antenna House" or "AH" in the test set. This may be useful for cross-validation, but has not been tested with a large data set (test set n~3400 files).
+- To only install dependencies for filter_cli.py please `pip install -r filter_requirements.txt`.
+
 ## R Script Dependencies
 
 Currently using `renv` for package management.
