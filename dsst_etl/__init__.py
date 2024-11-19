@@ -2,8 +2,9 @@
 DSST ETL Package
 """
 
-import os
 import logging
+import os
+
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -11,6 +12,7 @@ from sqlalchemy.orm import sessionmaker
 load_dotenv()
 
 logger = logging.getLogger(__name__)
+
 
 def get_db_url():
     database_url = (
@@ -22,8 +24,10 @@ def get_db_url():
     )
     return database_url
 
+
 def get_db_engine():
     return create_engine(get_db_url())
+
 
 engine = get_db_engine()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

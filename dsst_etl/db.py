@@ -1,11 +1,8 @@
-import os
-
-from dsst_etl import get_db_engine
-from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from .models import Base
+from dsst_etl import get_db_engine
 
+from .models import Base
 
 
 def get_db_session():
