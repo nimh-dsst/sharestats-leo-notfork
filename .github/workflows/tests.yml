@@ -42,8 +42,8 @@ jobs:
           docker compose -f .docker/postgres-compose.yaml up -d
 
       - name: Run tests
-        run: pytest tests
+        run: uv run pytest tests
 
       - name: Stop Docker stack
         if: always()
-        run: docker compose -f compose.yaml -f compose.development.override.yaml down
+        run: docker compose -f .docker/postgres-compose.yaml down
