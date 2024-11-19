@@ -98,3 +98,75 @@ In order to separate the develepment dependencies and the required depedencies, 
 ### psycopg2
 
 The PYPI package `psycopg2-binary` is used in `requirements.in` for compatiblity with pip-tools. This version of psycopg2 is not for production uses of POSTGRESQL. See [psycopg2-binary docs](https://pypi.org/project/psycopg2-binary/) for an explanation.
+
+### DSST-ETL
+
+Some useful commands:
+
+```
+#install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# install all dependencies
+uv sync --all-extras
+# activate the virtual environment
+source .venv/bin/activate
+
+# copy the mock environment variables to the file used by docker compose and the package
+cp .mockenv .env
+
+# start the postgres server
+docker compose -f .docker/postgres-compose.yaml up -d
+
+# stop the postgres server and remove the volume with -v
+docker compose -f .docker/postgres-compose.yaml down -v
+
+# install the pre-commit hooks
+pre-commit install
+
+# run the pre-commit hooks on all files
+pre-commit run -all
+
+# run the tests
+pytest
+```
+
+## Database Migrations
+
+This project uses Alembic for database migrations. Follow the steps below to generate and apply migrations to the database.
+
+### Prerequisites
+
+- Ensure you have Alembic installed in your Python environment. You can install it using pip:
+  ```bash
+  pip install alembic  ```
+
+- Make sure your database is running. If you're using Docker, you can start the database with:
+  ```bash
+  docker-compose -f .docker/postgres-compose.yaml up -d  ```
+
+### Running Migrations
+
+1. **Configure Alembic**: Ensure that the `alembic/env.py` file is correctly set up to connect to your database. This involves setting the SQLAlchemy URL in the `alembic.ini` file.
+
+2. **Create a New Migration**: To create a new migration script, run the following command:
+   ```bash
+   alembic revision --autogenerate -m "Description of changes"   ```
+
+   This will generate a new migration script in the `alembic/versions` directory.
+
+3. **Review the Migration Script**: Open the generated migration script and review it to ensure it accurately reflects the changes you want to make to the database schema.
+
+4. **Apply the Migration**: To apply the migration to the database, run:
+   ```bash
+   alembic upgrade head   ```
+
+   This command will apply all pending migrations up to the latest one.
+
+5. **Verify the Database**: Check your database to ensure that the schema has been updated as expected.
+
+### Troubleshooting
+
+- If you encounter any issues, ensure that your database connection settings in `alembic.ini` are correct.
+- Check the Alembic logs for any error messages that might indicate what went wrong.
+
+For more detailed information on using Alembic, refer to the [Alembic documentation](https://alembic.sqlalchemy.org/en/latest/).

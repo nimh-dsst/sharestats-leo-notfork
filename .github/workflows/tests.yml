@@ -1,0 +1,49 @@
+name: Tests
+
+on:
+  push:
+    branches: [ '*' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    - uses: pre-commit/action@v3.0.1
+
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.11]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          pip install uv
+          uv pip install --system -r <(uv pip compile --all-extras pyproject.toml)
+
+      - name: Start Docker stack
+        run: |
+          cp .mockenv .env
+          docker compose -f .docker/postgres-compose.yaml up -d
+
+      - name: Run tests
+        run: pytest tests
+
+      - name: Stop Docker stack
+        if: always()
+        run: docker compose -f compose.yaml -f compose.development.override.yaml down

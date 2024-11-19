@@ -1,0 +1,37 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.5.0
+    hooks:
+      # Run the linter.
+      - id: ruff
+        args: ["--fix"]
+        files: "dsst_etl/.*"
+      # Run the formatter.
+      - id: ruff-format
+        files: "dsst_etl/.*"
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        files: "dsst_etl/.*\\.py"
+        exclude: "examples|docs/examples|tests/data"
+      - id: check-added-large-files
+      - id: check-toml
+      - id: end-of-file-fixer
+        files: "dsst_etl/.*"
+        exclude: "examples|docs/examples|tests/data"
+
+  # - repo: https://github.com/pre-commit/mirrors-prettier
+  #   rev: v4.0.0-alpha.8
+  #   hooks:
+  #     - id: prettier
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: isort
+        args: ["--profile", "black"]
+        files: "dsst_etl/.*"

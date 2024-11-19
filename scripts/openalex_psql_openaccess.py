@@ -10,11 +10,11 @@ load_dotenv()
 
 # Database parameters from .env
 db_params = {
-    "dbname": os.getenv("DB_NAME"),
-    "user": os.getenv("DB_USER"),
-    "password": os.getenv("DB_PASSWORD"),
-    "host": os.getenv("DB_HOST"),
-    "port": os.getenv("DB_PORT"),
+    "dbname": os.getenv("POSTGRES_NAME"),
+    "user": os.getenv("POSTGRES_USER"),
+    "password": os.getenv("POSTGRES_PASSWORD"),
+    "host": os.getenv("POSTGRES_HOST"),
+    "port": os.getenv("POSTGRES_PORT"),
 }
 DATA_PATH = Path("delme_data")
 OPEN_ACCESS_PATH = Path(DATA_PATH) / "oa_urls.csv"
