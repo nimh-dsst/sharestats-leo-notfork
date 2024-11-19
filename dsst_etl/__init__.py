@@ -3,12 +3,14 @@ DSST ETL Package
 """
 
 import os
-
+import logging
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
+
+logger = logging.getLogger(__name__)
 
 def get_db_url():
     database_url = (

@@ -5,7 +5,7 @@ from typing import List, Optional, Tuple
 import boto3
 from botocore.exceptions import ClientError
 from dsst_etl._utils import get_compute_context_id, get_bucket_name
-from dsst_etl.models import Documents, Provenance
+from dsst_etl.models import Documents, Provenance, Works
 from dsst_etl.db import get_db_session
 from pathlib import Path
 import psycopg2
@@ -140,6 +140,23 @@ class PDFUploader:
         self.db_session.commit()
         logger.info(f"Created provenance record and linked to {len(documents)} documents")
         return provenance
+    
+    def initial_work_for_document(
+        self,
+        document: Documents,
+        provenance: Provenance
+    ) -> Works:
+        work = Works(
+            initial_document_id=document.id,
+            primary_document_id=document.id,
+            provenance_id=provenance.id
+        )
+        self.db_session.add(work)
+        self.db_session.commit()
+
+        document.work_id = work.id
+        self.db_session.commit()
+        return work
 
     def link_documents_to_work(
         self,
@@ -198,7 +215,10 @@ def upload_directory(
         documents = uploader.create_document_records(successful_uploads)
         
         # Create provenance record
-        uploader.create_provenance_record(documents, comment)
+        provenance = uploader.create_provenance_record(documents, comment)
+
+        for document in documents:
+            uploader.initial_work_for_document(document, provenance)
 
 
 
