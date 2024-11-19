@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install uv
-          uv pip install --system -r <(uv pip compile --all-extras pyproject.toml)
+          uv sync --all-extras
 
       - name: Start Docker stack
         run: |
