@@ -4,6 +4,7 @@ import logging
 from typing import List, Optional, Tuple
 import boto3
 from botocore.exceptions import ClientError
+import sqlalchemy
 from dsst_etl._utils import get_compute_context_id, get_bucket_name
 from dsst_etl.models import Documents, Provenance, Works
 from dsst_etl.db import get_db_session
@@ -100,7 +101,7 @@ class PDFUploader:
                 self.db_session.add(document)
                 self.db_session.commit()
                 documents.append(document)
-            except psycopg2.errors.UniqueViolation:
+            except (psycopg2.errors.UniqueViolation, sqlalchemy.exc.IntegrityError) as e:
                 self.db_session.rollback()
                 logger.warning(f"Document with hash {hash_data} already exists. Skipping.")
             
@@ -187,15 +188,13 @@ def upload_directory(
     
     Args:
         pdf_directory_path (str): Path to directory containing PDFs
-        bucket_name (str): S3 bucket name
         comment (Optional[str]): Comment for provenance record
     """
-    # Get list of PDF files
-    pdf_files = [
-        os.path.join(pdf_directory_path, f) 
-        for f in os.listdir(pdf_directory_path) 
-        if f.lower().endswith('.pdf')
-    ]
+    # Convert string path to Path object
+    pdf_directory = Path(pdf_directory_path)
+    
+    # Get list of PDF files using glob
+    pdf_files = [str(pdf_file) for pdf_file in pdf_directory.glob("*.pdf")]
     
     if not pdf_files:
         logger.warning(f"No PDF files found in {pdf_directory_path}")
@@ -213,6 +212,10 @@ def upload_directory(
     if successful_uploads:
         # Create document records
         documents = uploader.create_document_records(successful_uploads)
+        
+        if not documents:
+            logger.warning("No documents created")
+            return
         
         # Create provenance record
         provenance = uploader.create_provenance_record(documents, comment)
