@@ -35,15 +35,24 @@ jobs:
         run: |
           pip install uv
           uv sync --all-extras
+          pip install coverage
 
       - name: Start Docker stack
         run: |
           cp .mockenv .env
           docker compose -f .docker/postgres-compose.yaml up -d
 
-      - name: Run tests
-        run: uv run pytest tests
+      - name: Run tests with coverage
+        run: |
+          coverage run -m pytest tests
+          coverage report
+          coverage xml
 
       - name: Stop Docker stack
         if: always()
         run: docker compose -f .docker/postgres-compose.yaml down
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: coverage.xml
