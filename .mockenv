@@ -13,3 +13,5 @@ USER_AGENT=
 NCBI_API_KEY=
 
 S3_BUCKET_NAME=osm-pdf-uploads
+HOSTNAME=localhost
+USERNAME=quang

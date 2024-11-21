@@ -13,6 +13,8 @@ from dsst_etl._utils import get_bucket_name, get_compute_context_id
 from dsst_etl.db import get_db_session
 from dsst_etl.models import Documents, Provenance, Works
 
+from .config import config
+
 # Configure logging
 logger = logging.getLogger(__name__)
 
@@ -123,7 +125,7 @@ class PDFUploader:
             pipeline_name="Document Upload",
             version=__version__,
             compute=get_compute_context_id(),
-            personnel=os.environ.get("HOSTNAME"),
+            personnel=config.HOSTNAME,
             comment=comment,
         )
 
@@ -184,7 +186,8 @@ def upload_directory(pdf_directory_path: str, comment: Optional[str] = None) -> 
     pdf_directory = Path(pdf_directory_path)
 
     # Get list of PDF files using glob
-    pdf_files = [str(pdf_file) for pdf_file in pdf_directory.glob("*.pdf")]
+    # pdf_files = [str(pdf_file) for pdf_file in pdf_directory.glob("*.pdf")]
+    pdf_files = list(pdf_directory.glob("*.pdf"))
 
     if not pdf_files:
         logger.warning(f"No PDF files found in {pdf_directory_path}")
