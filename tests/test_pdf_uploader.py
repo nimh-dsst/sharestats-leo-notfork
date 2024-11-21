@@ -1,9 +1,9 @@
-import os
 import unittest
 from unittest.mock import patch, MagicMock
 from dsst_etl.upload_pdfs import PDFUploader
 from dsst_etl.db import get_db_session
-from dsst_etl.models import Base, Documents, Provenance, Works
+from dsst_etl.models import Documents, Provenance, Works
+from pathlib import Path
 
 class TestPDFUploader(unittest.TestCase):
 
@@ -29,8 +29,8 @@ class TestPDFUploader(unittest.TestCase):
         # Mock successful upload
         self.mock_s3_client.upload_file.return_value = None
 
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        pdf_paths = [os.path.join(base_dir, 'pdf-test', 'test1.pdf'), os.path.join(base_dir, 'pdf-test', 'test2.pdf')]
+        base_dir = Path(__file__).resolve().parent
+        pdf_paths = [base_dir / 'pdf-test' / 'test1.pdf', base_dir / 'pdf-test' / 'test2.pdf']
         successful_uploads, failed_uploads = self.uploader.upload_pdfs(pdf_paths)
 
         self.assertEqual(successful_uploads, pdf_paths)
@@ -41,16 +41,16 @@ class TestPDFUploader(unittest.TestCase):
         # Mock failed upload
         self.mock_s3_client.upload_file.side_effect = Exception("Upload failed")
 
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        pdf_paths = [os.path.join(base_dir, 'pdf-test', 'test1.pdf'), os.path.join(base_dir, 'pdf-test', 'test2.pdf')]
+        base_dir = Path(__file__).resolve().parent
+        pdf_paths = [base_dir / 'pdf-test' / 'test1.pdf', base_dir / 'pdf-test' / 'test2.pdf']
         successful_uploads, failed_uploads = self.uploader.upload_pdfs(pdf_paths)
 
         self.assertEqual(successful_uploads, [])
         self.assertEqual(failed_uploads, pdf_paths)
 
     def test_create_document_records(self):
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        successful_uploads = [os.path.join(base_dir, 'pdf-test', 'test1.pdf')]
+        base_dir = Path(__file__).resolve().parent
+        successful_uploads = [base_dir / 'pdf-test' / 'test1.pdf']
         print(successful_uploads)
         documents = self.uploader.create_document_records(successful_uploads)
 
