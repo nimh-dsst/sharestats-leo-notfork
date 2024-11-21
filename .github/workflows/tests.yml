@@ -34,6 +34,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install uv
+          pip install coverage
           uv sync --all-extras
 
       - name: Start Docker stack
