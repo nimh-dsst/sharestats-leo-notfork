@@ -35,16 +35,16 @@ jobs:
         run: |
           pip install uv
           uv sync --all-extras
-          pip install coverage
+          pip install coverage pytest
 
       - name: Start Docker stack
         run: |
           cp .mockenv .env
           docker compose -f .docker/postgres-compose.yaml up -d
 
-      - name: Run tests with uv
+      - name: Run tests with coverage
         run: |
-          uv run pytest tests
+          coverage run -m pytest tests
           coverage report
           coverage xml
 
