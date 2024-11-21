@@ -42,9 +42,9 @@ jobs:
           cp .mockenv .env
           docker compose -f .docker/postgres-compose.yaml up -d
 
-      - name: Run tests with coverage
+      - name: Run tests with uv
         run: |
-          coverage run -m pytest tests
+          uv run pytest tests
           coverage report
           coverage xml
 
