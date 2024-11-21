@@ -35,7 +35,6 @@ jobs:
         run: |
           pip install uv
           uv sync --all-extras
-          pip install coverage pytest python-dotenv sqlalchemy
 
       - name: Start Docker stack
         run: |
@@ -44,7 +43,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          coverage run -m pytest tests
+          uv run coverage run -m pytest tests
           coverage report
           coverage xml
 
