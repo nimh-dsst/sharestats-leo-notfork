@@ -58,7 +58,7 @@ class TestPDFUploader(unittest.TestCase):
         self.assertEqual(self.session.query(Documents).count(), 1)
 
     def test_create_provenance_record(self):
-        documents = [Documents(id=1)]
+        documents = [self.session.query(Documents).first()]
         self.session.add_all(documents)
         self.session.commit()
 
