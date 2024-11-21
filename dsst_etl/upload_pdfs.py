@@ -29,7 +29,7 @@ class PDFUploader:
     4. Linking documents to works
     """
 
-    def __init__(self):
+    def __init__(self, db_session: sqlalchemy.orm.Session):
         """
         Initialize the uploader with S3 bucket and database connection.
 
@@ -38,7 +38,7 @@ class PDFUploader:
         """
         self.bucket_name = get_bucket_name()
         self.s3_client = boto3.client("s3")
-        self.db_session = get_db_session()
+        self.db_session = db_session
 
     def upload_pdfs(self, pdf_paths: List[str]) -> Tuple[List[str], List[str]]:
         """
@@ -192,7 +192,7 @@ def upload_directory(pdf_directory_path: str, comment: Optional[str] = None) -> 
         logger.warning(f"No PDF files found in {pdf_directory_path}")
         return
 
-    uploader = PDFUploader()
+    uploader = PDFUploader(get_db_session())
 
     # Upload PDFs
     successful_uploads, failed_uploads = uploader.upload_pdfs(pdf_files)

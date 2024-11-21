@@ -1,0 +1,93 @@
+import os
+import unittest
+from unittest.mock import patch, MagicMock
+from dsst_etl.upload_pdfs import PDFUploader
+from dsst_etl.db import get_db_session
+from dsst_etl.models import Base, Documents, Provenance, Works
+
+class TestPDFUploader(unittest.TestCase):
+
+    @patch('dsst_etl.upload_pdfs.boto3.client')
+    def setUp(self, mock_boto_client):
+        # Mock S3 client
+        self.mock_s3_client = MagicMock()
+        mock_boto_client.return_value = self.mock_s3_client
+
+        # Start a new database session and transaction
+        self.session = get_db_session()
+        self.session.begin_nested()  # Start a nested transaction
+
+        # Initialize PDFUploader with the session
+        self.uploader = PDFUploader(self.session)
+
+    def tearDown(self):
+        # Rollback the transaction
+        self.session.rollback()
+        self.session.close()
+
+    def test_upload_pdfs_success(self):
+        # Mock successful upload
+        self.mock_s3_client.upload_file.return_value = None
+
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        pdf_paths = [os.path.join(base_dir, 'pdf-test', 'test1.pdf'), os.path.join(base_dir, 'pdf-test', 'test2.pdf')]
+        successful_uploads, failed_uploads = self.uploader.upload_pdfs(pdf_paths)
+
+        self.assertEqual(successful_uploads, pdf_paths)
+        self.assertEqual(failed_uploads, [])
+        self.mock_s3_client.upload_file.assert_called()
+
+    def test_upload_pdfs_failure(self):
+        # Mock failed upload
+        self.mock_s3_client.upload_file.side_effect = Exception("Upload failed")
+
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        pdf_paths = [os.path.join(base_dir, 'pdf-test', 'test1.pdf'), os.path.join(base_dir, 'pdf-test', 'test2.pdf')]
+        successful_uploads, failed_uploads = self.uploader.upload_pdfs(pdf_paths)
+
+        self.assertEqual(successful_uploads, [])
+        self.assertEqual(failed_uploads, pdf_paths)
+
+    def test_create_document_records(self):
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        successful_uploads = [os.path.join(base_dir, 'pdf-test', 'test1.pdf')]
+        print(successful_uploads)
+        documents = self.uploader.create_document_records(successful_uploads)
+
+        self.assertEqual(len(documents), 1)
+        self.assertEqual(self.session.query(Documents).count(), 1)
+
+    def test_create_provenance_record(self):
+        documents = [Documents(id=1)]
+        self.session.add_all(documents)
+        self.session.commit()
+
+        provenance = self.uploader.create_provenance_record(documents, "Test comment")
+
+        self.assertIsInstance(provenance, Provenance)
+        self.assertEqual(self.session.query(Provenance).count(), 1)
+
+    def test_initial_work_for_document(self):
+        document = Documents(id=1)
+        provenance = Provenance(id=1)
+        self.session.add_all([document, provenance])
+        self.session.commit()
+
+        work = self.uploader.initial_work_for_document(document, provenance)
+
+        self.assertIsInstance(work, Works)
+        self.assertEqual(self.session.query(Works).count(), 1)
+
+    def test_link_documents_to_work(self):
+        documents = [Documents(id=i) for i in range(1, 4)]
+        self.session.add_all(documents)
+        self.session.commit()
+
+        work_id = 1
+        self.uploader.link_documents_to_work([doc.id for doc in documents], work_id)
+
+        # Assuming link_documents_to_work modifies the documents in some way
+        # Add assertions here to verify the expected changes
+
+if __name__ == '__main__':
+    unittest.main()
