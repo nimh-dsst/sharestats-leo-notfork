@@ -79,15 +79,16 @@ class TestPDFUploader(unittest.TestCase):
         self.assertEqual(self.session.query(Works).count(), 1)
 
     def test_link_documents_to_work(self):
-        documents = [self.session.query(Documents).all()]
-        self.session.add_all(documents)
-        self.session.commit()
-
+        documents = self.session.query(Documents).all()
         work_id = 1
         self.uploader.link_documents_to_work([doc.id for doc in documents], work_id)
 
         # Assuming link_documents_to_work modifies the documents in some way
         # Add assertions here to verify the expected changes
+        self.assertEqual(self.session.query(Documents).count(), len(documents))
+        # Check that the documents have the correct work_id
+        for doc in documents:
+            self.assertEqual(doc.work_id, work_id)
 
 if __name__ == '__main__':
     unittest.main()
