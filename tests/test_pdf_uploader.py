@@ -68,7 +68,7 @@ class TestPDFUploader(unittest.TestCase):
         self.assertEqual(self.session.query(Provenance).count(), 1)
 
     def test_initial_work_for_document(self):
-        document = Documents(id=1)
+        document = self.session.query(Documents).first()
         provenance = Provenance(id=1)
         self.session.add_all([document, provenance])
         self.session.commit()
@@ -79,7 +79,7 @@ class TestPDFUploader(unittest.TestCase):
         self.assertEqual(self.session.query(Works).count(), 1)
 
     def test_link_documents_to_work(self):
-        documents = [Documents(id=i) for i in range(1, 4)]
+        documents = [self.session.query(Documents).all()]
         self.session.add_all(documents)
         self.session.commit()
 
