@@ -5,11 +5,9 @@ DSST ETL Package
 import logging
 import os
 
-from dotenv import load_dotenv
+from config import config
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
-load_dotenv()
 
 logger = logging.getLogger(__name__)
 
@@ -17,10 +15,10 @@ logger = logging.getLogger(__name__)
 def get_db_url():
     database_url = (
         "postgresql://"
-        f"{os.environ['POSTGRES_USER']}"
-        f":{os.environ['POSTGRES_PASSWORD']}"
-        f"@{os.environ['POSTGRES_HOST']}:"
-        f"{os.environ['POSTGRES_PORT']}/{os.environ['POSTGRES_DB']}"
+        f"{config.POSTGRES_USER}"
+        f":{config.POSTGRES_PASSWORD}"
+        f"@{config.POSTGRES_HOST}:"
+        f"{config.POSTGRES_PORT}/{config.POSTGRES_DB}"
     )
     return database_url
 
