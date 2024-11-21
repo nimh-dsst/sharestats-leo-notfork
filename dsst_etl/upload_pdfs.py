@@ -7,7 +7,6 @@ from typing import List, Optional, Tuple
 import boto3
 import psycopg2
 import sqlalchemy
-from botocore.exceptions import ClientError
 
 from dsst_etl import __version__
 from dsst_etl._utils import get_bucket_name, get_compute_context_id
@@ -63,8 +62,7 @@ class PDFUploader:
                 self.s3_client.upload_file(pdf_path, self.bucket_name, s3_key)
                 successful_uploads.append(pdf_path)
                 logger.info(f"Successfully uploaded {pdf_path} to S3")
-
-            except ClientError as e:
+            except Exception as e:
                 logger.error(f"Failed to upload {pdf_path}: {str(e)}")
                 failed_uploads.append(pdf_path)
 
