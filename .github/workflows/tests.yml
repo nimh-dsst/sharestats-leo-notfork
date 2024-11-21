@@ -35,7 +35,7 @@ jobs:
         run: |
           pip install uv
           uv sync --all-extras
-          pip install coverage pytest
+          pip install coverage pytest python-dotenv
 
       - name: Start Docker stack
         run: |
