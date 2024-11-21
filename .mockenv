@@ -11,3 +11,5 @@ USER_AGENT=
 
 # metapub; get key from https://pubmed.ncbi.nlm.nih.gov for faster requests
 NCBI_API_KEY=
+
+S3_BUCKET_NAME=osm-pdf-uploads
