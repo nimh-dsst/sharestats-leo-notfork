@@ -69,7 +69,7 @@ class TestPDFUploader(unittest.TestCase):
 
     def test_initial_work_for_document(self):
         document = self.session.query(Documents).first()
-        provenance = Provenance(id=1)
+        provenance = Provenance(pipeline_name="test", version="0.0.1", compute="test", personnel="test", comment="test")
         self.session.add_all([document, provenance])
         self.session.commit()
 
