@@ -11,8 +11,8 @@ class Works(Base):
     id = Column(Integer, primary_key=True)
     created_at = Column(DateTime, default=func.now())
     modified_at = Column(DateTime, default=func.now(), onupdate=func.now())
-    initial_document_id = Column(Integer, ForeignKey("documents.id"), nullable=False)
-    primary_document_id = Column(Integer, ForeignKey("documents.id"), nullable=False)
+    initial_document_id = Column(Integer, ForeignKey("documents.id"), nullable=True)
+    primary_document_id = Column(Integer, ForeignKey("documents.id"), nullable=True)
     provenance_id = Column(Integer, ForeignKey("provenance.id"))
 
     # Relationships

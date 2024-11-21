@@ -80,7 +80,8 @@ class TestPDFUploader(unittest.TestCase):
 
     def test_link_documents_to_work(self):
         documents = self.session.query(Documents).all()
-        work_id = 1
+        works = self.session.query(Works).first()
+        work_id = works.id
         self.uploader.link_documents_to_work([doc.id for doc in documents], work_id)
 
         # Assuming link_documents_to_work modifies the documents in some way
