@@ -37,6 +37,9 @@ dev = [
     "types-beautifulsoup4",
     "types-psycopg2",
 ]
+ci = [
+    "coverage>=7.6.7",
+]
 
 
 [build-system]

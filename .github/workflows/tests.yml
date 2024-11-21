@@ -34,7 +34,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip install uv
-          pip install coverage
           uv sync --all-extras
 
       - name: Start Docker stack
@@ -44,7 +43,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          uv run coverage run -m pytest tests
+          uv run pytest tests
           coverage report
           coverage xml
 
