@@ -166,7 +166,7 @@ class PDFUploader:
             work_id (int): Work ID to link documents to
         """
         for doc_id in document_ids:
-            document = self.db_session.query(Documents).get(doc_id)
+            document = self.db_session.get(Documents, doc_id)
             if document:
                 document.work_id = work_id
 
