@@ -8,14 +8,17 @@ from dsst_etl.models import Documents, Provenance, Works
 from pathlib import Path
 from dsst_etl.db import init_db
 
+
 class TestPDFUploader(unittest.TestCase):
 
     @patch('dsst_etl.upload_pdfs.boto3.client')
     def setUp(self, mock_boto_client):
         # Mock S3 client
+        print("Setting up test")
         self.mock_s3_client = MagicMock()
         mock_boto_client.return_value = self.mock_s3_client
 
+        
         init_db(is_test=True)
 
         # Create a new session for each test
@@ -25,10 +28,11 @@ class TestPDFUploader(unittest.TestCase):
 
         # Initialize PDFUploader with the session
         self.uploader = PDFUploader(self.session)
-
+        
         
 
     def tearDown(self):
+        print("Tearing down test")
         # Rollback the transaction
         self.session.rollback()
 

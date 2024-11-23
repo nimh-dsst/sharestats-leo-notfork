@@ -14,6 +14,9 @@ def get_db_session(is_test=False):
 
 def init_db(is_test=False):
     engine = get_db_engine(is_test)
+    print("engine.urlengine.urlengine.url: ", engine.url)
+    print("database_exists(engine.url): ", database_exists(engine.url))
     if not database_exists(engine.url):
+        print("Creating database")
         create_database(engine.url)
     Base.metadata.create_all(engine)
