@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
-from sqlalchemy import update
+from sqlalchemy import update, inspect
 from dsst_etl.upload_pdfs import PDFUploader
 from dsst_etl.db import get_db_session
 from dsst_etl.models import Documents, Provenance, Works
@@ -22,8 +22,6 @@ class TestPDFUploader(unittest.TestCase):
         self.session = get_db_session()
         # Start a transaction that we can roll back after each test
         self.transaction = self.session.begin()
-        
-
 
         # Initialize PDFUploader with the session
         self.uploader = PDFUploader(self.session)
@@ -34,26 +32,34 @@ class TestPDFUploader(unittest.TestCase):
         # Rollback the transaction
         self.session.rollback()
 
-        # Ensure all data is removed
-        # Update works set provenance_id = null
-        self.session.execute(update(Works).values(provenance_id=None))
+        # Check if the Works table exists before attempting to update or delete
+        inspector = inspect(self.session.bind)
+        if 'works' in inspector.get_table_names():
+            # Ensure all data is removed
+            self.session.execute(update(Works).values(provenance_id=None))
+            self.session.execute(update(Works).values(initial_document_id=None))
+            self.session.execute(update(Works).values(primary_document_id=None))
+            self.session.commit()
+            
 
-        # Update documents set provenance_id = null
-        self.session.execute(update(Documents).values(provenance_id=None))
+        # Check if the Documents table exists before attempting to update or delete
+        if 'documents' in inspector.get_table_names():
+            self.session.execute(update(Documents).values(provenance_id=None))
+            self.session.execute(update(Documents).values(work_id=None))
+            self.session.commit()
+            
 
-        # Update documents set work_id = null
-        self.session.execute(update(Documents).values(work_id=None))
+        # Check if the Provenance table exists before attempting to delete
+        if 'provenance' in inspector.get_table_names():
+            self.session.query(Provenance).delete()
 
-        # Update works set initial_document_id = null
-        self.session.execute(update(Works).values(initial_document_id=None))
+        if "documents" in inspector.get_table_names():
+            self.session.query(Documents).delete()
 
-        # Update works set primary_document_id = null
-        self.session.execute(update(Works).values(primary_document_id=None))
-        self.session.query(Documents).delete()
-        self.session.query(Provenance).delete()
-        self.session.query(Works).delete()
+        if "works" in inspector.get_table_names():
+            self.session.query(Works).delete()
+
         self.session.commit()
-
         self.session.close()
 
         
