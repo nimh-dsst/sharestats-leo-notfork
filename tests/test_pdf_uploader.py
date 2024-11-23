@@ -26,6 +26,10 @@ class TestPDFUploader(unittest.TestCase):
         # Start a transaction that we can roll back after each test
         self.transaction = self.session.begin()
 
+        inspector = inspect(self.session.bind)
+        print("Tbl: ", inspector.get_table_names())
+        
+
         # Initialize PDFUploader with the session
         self.uploader = PDFUploader(self.session)
         
