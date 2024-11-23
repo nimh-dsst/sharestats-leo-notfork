@@ -24,8 +24,22 @@ def get_db_url():
     return database_url
 
 
-def get_db_engine():
-    return create_engine(get_db_url())
+def get_db_url_test():
+    database_url = (
+        "postgresql://"
+        f"{config.POSTGRES_USER}"
+        f":{config.POSTGRES_PASSWORD}"
+        f"@{config.POSTGRES_HOST}:"
+        f"{config.POSTGRES_PORT}/{config.POSTGRES_DB_UNIT_TEST}"
+    )
+    return database_url
+
+
+def get_db_engine(is_test=False):
+    if is_test:
+        return create_engine(get_db_url_test())
+    else:
+        return create_engine(get_db_url())
 
 
 engine = get_db_engine()

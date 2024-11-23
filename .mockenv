@@ -5,6 +5,7 @@ POSTGRES_PASSWORD=postgres
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
 POSTGRES_DB=pdx
+POSTGRES_DB_UNIT_TEST=pdx_test
 
 # requests will be rejected without user-agent
 USER_AGENT=
