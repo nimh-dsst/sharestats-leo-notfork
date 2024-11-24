@@ -11,14 +11,12 @@ from dsst_etl.db import init_db
 
 class TestPDFUploader(unittest.TestCase):
 
-    @patch('dsst_etl.upload_pdfs.boto3.client')
+    @patch("dsst_etl.upload_pdfs.boto3.client")
     def setUp(self, mock_boto_client):
         # Mock S3 client
-        print("Setting up test")
         self.mock_s3_client = MagicMock()
         mock_boto_client.return_value = self.mock_s3_client
 
-        
         init_db(is_test=True)
 
         # Create a new session for each test
@@ -26,39 +24,30 @@ class TestPDFUploader(unittest.TestCase):
         # Start a transaction that we can roll back after each test
         self.transaction = self.session.begin()
 
-        inspector = inspect(self.session.bind)
-        print("Tbl: ", inspector.get_table_names())
-        
-
         # Initialize PDFUploader with the session
         self.uploader = PDFUploader(self.session)
-        
-        
 
     def tearDown(self):
-        print("Tearing down test")
         # Rollback the transaction
         self.session.rollback()
 
         # Check if the Works table exists before attempting to update or delete
         inspector = inspect(self.session.bind)
-        if 'works' in inspector.get_table_names():
+        if "works" in inspector.get_table_names():
             # Ensure all data is removed
             self.session.execute(update(Works).values(provenance_id=None))
             self.session.execute(update(Works).values(initial_document_id=None))
             self.session.execute(update(Works).values(primary_document_id=None))
             self.session.commit()
-            
 
         # Check if the Documents table exists before attempting to update or delete
-        if 'documents' in inspector.get_table_names():
+        if "documents" in inspector.get_table_names():
             self.session.execute(update(Documents).values(provenance_id=None))
             self.session.execute(update(Documents).values(work_id=None))
             self.session.commit()
-            
 
         # Check if the Provenance table exists before attempting to delete
-        if 'provenance' in inspector.get_table_names():
+        if "provenance" in inspector.get_table_names():
             self.session.query(Provenance).delete()
 
         if "documents" in inspector.get_table_names():
@@ -70,14 +59,15 @@ class TestPDFUploader(unittest.TestCase):
         self.session.commit()
         self.session.close()
 
-        
-
     def test_upload_pdfs_success(self):
         # Mock successful upload
         self.mock_s3_client.upload_file.return_value = None
 
         base_dir = Path(__file__).resolve().parent
-        pdf_paths = [base_dir / 'pdf-test' / 'test1.pdf', base_dir / 'pdf-test' / 'test2.pdf']
+        pdf_paths = [
+            base_dir / "pdf-test" / "test1.pdf",
+            base_dir / "pdf-test" / "test2.pdf",
+        ]
         successful_uploads, failed_uploads = self.uploader.upload_pdfs(pdf_paths)
 
         self.assertEqual(successful_uploads, pdf_paths)
@@ -89,7 +79,10 @@ class TestPDFUploader(unittest.TestCase):
         self.mock_s3_client.upload_file.side_effect = Exception("Upload failed")
 
         base_dir = Path(__file__).resolve().parent
-        pdf_paths = [base_dir / 'pdf-test' / 'test1.pdf', base_dir / 'pdf-test' / 'test2.pdf']
+        pdf_paths = [
+            base_dir / "pdf-test" / "test1.pdf",
+            base_dir / "pdf-test" / "test2.pdf",
+        ]
         successful_uploads, failed_uploads = self.uploader.upload_pdfs(pdf_paths)
 
         self.assertEqual(successful_uploads, [])
@@ -97,7 +90,7 @@ class TestPDFUploader(unittest.TestCase):
 
     def test_create_document_records(self):
         base_dir = Path(__file__).resolve().parent
-        successful_uploads = [base_dir / 'pdf-test' / 'test1.pdf']
+        successful_uploads = [base_dir / "pdf-test" / "test1.pdf"]
         documents = self.uploader.create_document_records(successful_uploads)
 
         self.assertEqual(len(documents), 1)
@@ -107,7 +100,7 @@ class TestPDFUploader(unittest.TestCase):
         documents = [self.session.query(Documents).first()]
         if documents[0] is None:
             base_dir = Path(__file__).resolve().parent
-            successful_uploads = [base_dir / 'pdf-test' / 'test1.pdf']
+            successful_uploads = [base_dir / "pdf-test" / "test1.pdf"]
             documents = self.uploader.create_document_records(successful_uploads)
 
         self.session.add_all(documents)
@@ -122,11 +115,17 @@ class TestPDFUploader(unittest.TestCase):
         document = self.session.query(Documents).first()
         if document is None:
             base_dir = Path(__file__).resolve().parent
-            successful_uploads = [base_dir / 'pdf-test' / 'test1.pdf']
+            successful_uploads = [base_dir / "pdf-test" / "test1.pdf"]
             documents = self.uploader.create_document_records(successful_uploads)
             document = documents[0]
 
-        provenance = Provenance(pipeline_name="test", version="0.0.1", compute="test", personnel="test", comment="test")
+        provenance = Provenance(
+            pipeline_name="test",
+            version="0.0.1",
+            compute="test",
+            personnel="test",
+            comment="test",
+        )
         self.session.add_all([document, provenance])
         self.session.commit()
 
@@ -153,5 +152,6 @@ class TestPDFUploader(unittest.TestCase):
         for doc in documents:
             self.assertEqual(doc.work_id, work_id)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()
