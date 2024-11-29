@@ -48,10 +48,7 @@ def extract_pdf_metadata(
     FileExistsError
         If `new_run` is True and the output CSV file already exists.
     """
-    if pdf2doi_verbose:
-        pdf2doi_config.set("verbose", True)
-    else:
-        pdf2doi_config.set("verbose", False)
+    pdf2doi_config.set("verbose", pdf2doi_verbose)
 
     output_exists: bool = output_csv.exists()
 
