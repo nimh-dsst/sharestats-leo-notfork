@@ -39,6 +39,7 @@ dev = [
     "pandas-stubs",
     "types-beautifulsoup4",
     "types-psycopg2",
+    "types-tqdm",
 ]
 ci = [
     "coverage>=7.6.7",

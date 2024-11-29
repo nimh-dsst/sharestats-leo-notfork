@@ -2,15 +2,15 @@
 DSST ETL Package
 """
 
-import logging
 import os
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from .config import config
+from .logger import configure_logger
 
-logger = logging.getLogger(__name__)
+logger = configure_logger()
 
 
 def get_db_url():
