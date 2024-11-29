@@ -244,5 +244,5 @@ class RTransparentPublication(Base):
     is_data_pred = Column(Boolean, nullable=True)
     is_code_pred = Column(Boolean, nullable=True)
 
-    work_id = Column(Integer, ForeignKey("works.id"), nullable=False)
-    provenance_id = Column(Integer, ForeignKey("provenance.id"), nullable=False)
+    work_id = Column(Integer, ForeignKey("works.id"), nullable=True)
+    provenance_id = Column(Integer, ForeignKey("provenance.id"), nullable=True)
