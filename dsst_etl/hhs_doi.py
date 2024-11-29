@@ -2,11 +2,11 @@ import csv
 from pathlib import Path
 from typing import Generator
 
+import pdf2doi
 import pypdf
+from pdf2doi import config as pdf2doi_config
 from pypdf._doc_common import DocumentInformation
 from pypdf.errors import EmptyFileError, PdfStreamError
-import pdf2doi
-from pdf2doi import config as pdf2doi_config
 from tqdm import tqdm
 
 from dsst_etl import logger

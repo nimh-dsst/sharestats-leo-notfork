@@ -1,7 +1,6 @@
 import logging
-from logging import Logger
-from logging import StreamHandler, FileHandler, Formatter
 import sys
+from logging import FileHandler, Formatter, Logger, StreamHandler
 
 
 def configure_logger() -> Logger:
