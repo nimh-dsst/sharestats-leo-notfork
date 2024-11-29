@@ -76,8 +76,6 @@ def _extract_hhs_info(pdf: Path) -> dict[str, str | None]:
     ----------
     pdf : Path
         Path to the PDF file from which to extract information.
-    logger : Logger
-        Logger object to record any errors or warnings during extraction.
 
     Returns
     -------
@@ -167,8 +165,6 @@ def _parse_pdfs(
         If True, prevents reusing previously processed PDFs.
     make_filelist : bool
         If True, converts PDF generator to a list for memory-intensive progress tracking.
-    logger : Logger
-        Logger object to record processing information.
 
     Returns
     -------
@@ -243,9 +239,6 @@ def extract_pdf_metadata(
     pdf2doi_verbose : bool, optional
         If True, enables verbose output from the `pdf2doi` library.
         Defaults to False.
-    logger : Logger, optional
-        Logger for recording processing information.
-        Defaults to the module-level LOGGER.
 
     Returns
     -------
