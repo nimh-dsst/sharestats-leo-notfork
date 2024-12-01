@@ -1,12 +1,10 @@
-import logging
-
+import numpy as np
 import pandas as pd
 import sqlalchemy
+from tqdm import tqdm
 
+from dsst_etl.logger import logger
 from dsst_etl.models import Provenance, RTransparentPublication, Works
-
-# Configure logging
-logger = logging.getLogger(__name__)
 
 
 class RTransparentDataUploader:
@@ -41,22 +39,19 @@ class RTransparentDataUploader:
         logger.info(f"Read {len(data)} rows from {file_path}")
         logger.info(f"Processing {n_rows} rows at a time")
         logger.info("Starting to process data")
-        print(data.columns)
 
         # Process data in chunks
-        for start in range(0, len(data), n_rows):
+        for start in tqdm(range(0, len(data), n_rows), desc="Processing data"):
             chunk = data.iloc[start : start + n_rows]
-
             # Create entries for RTransparentPublication
             publications = []
             for _, row in chunk.iterrows():
-                publication = RTransparentPublication(
-                    is_open_code=row.get("is_open_code"),
-                    is_open_data=row.get("is_open_data"),
-                    year=row.get("year"),
-                    filename=row.get("filename"),
-                    # Add other fields as necessary
-                )
+                # Convert numpy.ndarray to string
+                row_dict = row.to_dict()
+                if isinstance(row_dict.get("funder"), np.ndarray):
+                    row_dict["funder"] = ", ".join(row_dict["funder"].tolist())
+
+                publication = RTransparentPublication(**row_dict)
                 publications.append(publication)
 
                 # Create and reference entries in Works and Provenance as needed

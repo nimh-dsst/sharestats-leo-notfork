@@ -3,11 +3,6 @@ import argparse
 from dsst_etl.db import get_db_session
 from dsst_etl.upload_rtransparent_data import RTransparentDataUploader  
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s'
-    )
 
 def main():
     # Set up argument parser

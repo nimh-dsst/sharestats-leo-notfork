@@ -59,6 +59,8 @@ class RTransparentPublication(Base):
     __tablename__ = "rtransparent_publication"
 
     id = Column(Integer, primary_key=True)
+    title = Column(String)
+    author = Column(String)
 
     # Mandatory fields
     is_open_code = Column(Boolean, nullable=True)
@@ -243,6 +245,7 @@ class RTransparentPublication(Base):
     title = Column(String, nullable=True)
     is_data_pred = Column(Boolean, nullable=True)
     is_code_pred = Column(Boolean, nullable=True)
+    funder = Column(String, nullable=True)
 
     work_id = Column(Integer, ForeignKey("works.id"), nullable=True)
     provenance_id = Column(Integer, ForeignKey("provenance.id"), nullable=True)
