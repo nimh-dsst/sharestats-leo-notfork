@@ -14,5 +14,4 @@ test-pdf/*.pdf
 dsst_etl.egg-info/*
 uv.lock
 .coverage
-data/all_indicators_fully_typed-chunks/*
-data/rtransparent.tar.gz
+local-test-data/*
