@@ -1,5 +1,4 @@
 import hashlib
-import logging
 import os
 from pathlib import Path
 from typing import List, Optional, Tuple
@@ -8,15 +7,12 @@ import boto3
 import psycopg2
 import sqlalchemy
 
-from dsst_etl import __version__
+from dsst_etl import __version__, logger
 from dsst_etl._utils import get_bucket_name, get_compute_context_id
 from dsst_etl.db import get_db_session
 from dsst_etl.models import Documents, Provenance, Works
 
 from .config import config
-
-# Configure logging
-logger = logging.getLogger(__name__)
 
 
 class PDFUploader:
