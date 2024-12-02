@@ -190,7 +190,7 @@ def _parse_pdfs(
             csv_dict_reader = csv.DictReader(file)
             for row in csv_dict_reader:
                 if row["identifier_type"] == "DOI":
-                    filenames.append(Path(row["name"]).relative_to(Path.cwd()))
+                    filenames.append(Path(row["name"]).relative_to(pdf_dir))
                 else:
                     continue
         previously_found: set[Path] = set(filenames)
