@@ -15,3 +15,4 @@ dsst_etl.egg-info/*
 uv.lock
 .coverage
 local-test-data/*
+dsst_etl.log
