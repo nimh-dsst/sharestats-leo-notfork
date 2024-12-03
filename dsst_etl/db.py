@@ -1,12 +1,9 @@
-import logging
-
-from sqlalchemy import inspect
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import create_database, database_exists
 
-from .models import Base
+from dsst_etl import get_db_engine, logger
 
-logger = logging.getLogger(__name__)
+from .models import Base
 
 
 def get_db_session(engine):

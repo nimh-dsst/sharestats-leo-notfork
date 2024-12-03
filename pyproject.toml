@@ -24,6 +24,9 @@ dependencies = [
     "sqlalchemy-utils>=0.41.2",
     "pandas",
     "pyarrow"
+    "pdf2doi",
+    "tqdm",
+    "pypdf",
 ]
 
 [project.optional-dependencies]
@@ -38,6 +41,7 @@ dev = [
     "pandas-stubs",
     "types-beautifulsoup4",
     "types-psycopg2",
+    "types-tqdm",
 ]
 ci = [
     "coverage>=7.6.7",

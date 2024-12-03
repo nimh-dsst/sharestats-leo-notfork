@@ -1,23 +1,48 @@
 import logging
 import sys
+from logging import FileHandler, Formatter, Logger, StreamHandler
 
-# Create a logger
-logger = logging.getLogger("dsst_etl")
-logger.setLevel(logging.DEBUG)  # Set the log level to DEBUG for detailed output
 
-# Create a console handler
-console_handler = logging.StreamHandler(sys.stdout)
-console_handler.setLevel(logging.DEBUG)
+def configure_logger() -> Logger:
+    """
+    Configure and return a logger with multiple handlers.
 
-# Create a formatter and set it for the handler
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-console_handler.setFormatter(formatter)
+    Returns
+    -------
+    logging.Logger
+        A configured logger with console and file handlers.
 
-# Add the handler to the logger
-logger.addHandler(console_handler)
+    Notes
+    -----
+    The logger is set up with two handlers:
+    - A console handler logging at INFO level
+    - A file handler logging at DEBUG level
+    Both handlers use the same formatter for consistent log messages.
+    """
+    # Create logger
+    logger: Logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)  # Set logger to capture all levels
 
-# Optionally, add a file handler if you want to log to a file
-file_handler = logging.FileHandler("dsst_etl.log")
-file_handler.setLevel(logging.INFO)
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
+    # Create console handler
+    console_handler: StreamHandler = StreamHandler(sys.stdout)
+    console_handler.setLevel(logging.INFO)  # Handler can filter messages
+
+    # Create file handler for debug logs
+    file_handler: FileHandler = FileHandler("debug.log")
+    file_handler.setLevel(logging.DEBUG)  # Capture all debug messages
+
+    # Create formatter
+    formatter: Formatter = Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    console_handler.setFormatter(formatter)
+    file_handler.setFormatter(formatter)
+
+    # Add handlers to logger
+    logger.addHandler(console_handler)
+    logger.addHandler(file_handler)
+
+    # Prevent log propagation to parent loggers
+    logger.propagate = False
+
+    return logger
