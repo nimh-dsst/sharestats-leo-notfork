@@ -42,4 +42,4 @@ repos:
         name: Alembic Migration Check
         entry: ./alembic_check.sh
         language: system
-        files: ./alembic/versions/  # A
+        files: ^(alembic/versions/|dsst_etl/)

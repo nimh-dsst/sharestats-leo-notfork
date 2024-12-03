@@ -1,4 +1,3 @@
-# File: scripts/alembic_check.sh
 #!/bin/bash
 
 # Exit immediately if any command fails
