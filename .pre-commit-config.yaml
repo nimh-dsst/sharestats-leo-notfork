@@ -45,3 +45,4 @@ repos:
         files: "dsst_etl/.*"
         additional_dependencies:
           - alembic
+          - python-dotenv
