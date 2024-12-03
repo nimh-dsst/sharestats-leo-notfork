@@ -22,15 +22,13 @@ class TestPDFUploader(unittest.TestCase):
 
         # Create a new session for each test
         self.session = get_db_session(self.engine)
-        # Start a transaction that we can roll back after each test
-        self.transaction = self.session.begin()
-
+        
         # Initialize PDFUploader with the session
         self.uploader = PDFUploader(self.session)
 
     def tearDown(self):
         # Rollback the transaction
-        self.session.rollback()
+        
 
         # Check if the Works table exists before attempting to update or delete
         inspector = inspect(self.session.bind)
@@ -44,7 +42,6 @@ class TestPDFUploader(unittest.TestCase):
         # Check if the Documents table exists before attempting to update or delete
         if "documents" in inspector.get_table_names():
             self.session.execute(update(Documents).values(provenance_id=None))
-            self.session.execute(update(Documents).values(work_id=None))
             self.session.commit()
 
         # Check if the Provenance table exists before attempting to delete

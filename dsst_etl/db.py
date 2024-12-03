@@ -1,7 +1,8 @@
+from sqlalchemy import inspect
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import create_database, database_exists
 
-from dsst_etl import get_db_engine, logger
+from dsst_etl import logger
 
 from .models import Base
 

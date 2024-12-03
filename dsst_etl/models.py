@@ -38,7 +38,7 @@ class Documents(Base):
     created_at = Column(DateTime, default=func.now())
     s3uri = Column(Text, nullable=False)
     provenance_id = Column(Integer, ForeignKey("provenance.id"))
-    work_id = Column(Integer, ForeignKey("works.id"))
+    # work_id = Column(Integer, ForeignKey("works.id"))
 
     # Relationships
     # provenance = relationship("Provenance")

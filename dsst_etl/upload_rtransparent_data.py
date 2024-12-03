@@ -3,8 +3,10 @@ import pandas as pd
 import sqlalchemy
 from tqdm import tqdm
 
-from dsst_etl.logger import logger
+from dsst_etl.logger import configure_logger
 from dsst_etl.models import Provenance, RTransparentPublication, Works
+
+logger = configure_logger()
 
 
 class RTransparentDataUploader:
