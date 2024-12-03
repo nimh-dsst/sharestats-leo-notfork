@@ -72,3 +72,6 @@ target-version = [ "py311"]
 [tool.ruff]
 line-length = 88
 indent-width = 4
+
+[tool.poetry.dependencies]
+alembic = "^1.7"
