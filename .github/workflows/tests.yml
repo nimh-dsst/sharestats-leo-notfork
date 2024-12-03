@@ -45,6 +45,16 @@ jobs:
           cp .mockenv .env
           docker compose -f .docker/postgres-compose.yaml up -d
 
+      - name: Run Alembic check
+        run: |
+          alembic check
+          if [ $? -ne 0 ]; then
+            echo "Error: Uncommitted Alembic upgrade operations detected."
+            echo "Please generate and commit your migration scripts."
+            exit 1
+          fi
+
+
       - name: Run tests with coverage
         run: |
           coverage run -m pytest -s tests

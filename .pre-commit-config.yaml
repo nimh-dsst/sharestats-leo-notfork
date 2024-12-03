@@ -35,11 +35,3 @@ repos:
         name: isort
         args: ["--profile", "black"]
         files: "dsst_etl/.*"
-
-  - repo: local
-    hooks:
-      - id: alembic-check
-        name: Alembic Migration Check
-        entry: ./alembic_check.sh
-        language: system
-        files: ^(alembic/versions/|dsst_etl/)
