@@ -40,9 +40,6 @@ repos:
     hooks:
       - id: alembic-check
         name: Alembic Migration Check
-        entry: bash -c 'PYTHONPATH=./dsst_etl alembic check || (echo "Pending migrations detected. Please add migration scripts." && exit 1)'
-        language: python
-        files: "dsst_etl/.*"
-        additional_dependencies:
-          - alembic
-          - python-dotenv
+        entry: ./alembic_check.sh
+        language: system
+        files: ./alembic/versions/  # A
