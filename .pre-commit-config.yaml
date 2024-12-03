@@ -35,3 +35,11 @@ repos:
         name: isort
         args: ["--profile", "black"]
         files: "dsst_etl/.*"
+
+  - repo: local
+    hooks:
+      - id: alembic-check
+        name: Alembic Migration Check
+        entry: bash -c 'alembic check || (echo "Pending migrations detected. Please add migration scripts." && exit 1)'
+        language: system
+        files: "dsst_etl/.*"

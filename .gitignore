@@ -16,3 +16,4 @@ uv.lock
 .coverage
 local-test-data/*
 dsst_etl.log
+debug.log
