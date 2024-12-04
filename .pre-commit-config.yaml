@@ -23,10 +23,15 @@ repos:
         files: "dsst_etl/.*"
         exclude: "examples|docs/examples|tests/data"
 
-  # - repo: https://github.com/pre-commit/mirrors-prettier
-  #   rev: v4.0.0-alpha.8
-  #   hooks:
-  #     - id: prettier
+  - repo: local
+    hooks:
+      - id: alembic-check
+        name: Check for model changes requiring migrations
+        entry: alembic check
+        language: system
+        pass_filenames: false
+        types: [python]
+        files: ^dsst_etl/.*\.py$
 
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
