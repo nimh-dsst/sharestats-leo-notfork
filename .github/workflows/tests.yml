@@ -44,6 +44,9 @@ jobs:
         run: |
           cp .mockenv .env
           docker compose -f .docker/postgres-compose.yaml up -d
+          # Wait for PostgreSQL to be ready
+          timeout 20 bash -c 'until docker exec $(docker ps -q -f name=postgres) pg_isready; do sleep 1; done'
+          docker ps
         
       - name: Run Alembic check
         run: |
