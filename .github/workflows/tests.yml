@@ -61,7 +61,7 @@ jobs:
 
       - name: Stop Docker stack
         if: always()
-        run: docker compose -f .docker/postgres-compose.yaml down
+        run: docker compose -f .docker/postgres-compose.yaml down -v --remove-orphans
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
