@@ -44,17 +44,17 @@ jobs:
         run: |
           cp .mockenv .env
           docker compose -f .docker/postgres-compose.yaml up -d
+        
+      - name: Run Alembic check
+        run: |
+          chmod +x alembic_check.sh
+          ./alembic_check.sh
 
       - name: Run tests with coverage
         run: |
           coverage run -m pytest -s tests
           coverage report
           coverage xml
-        
-      - name: Run Alembic check
-        run: |
-          chmod +x alembic_check.sh
-          ./alembic_check.sh
 
       - name: Stop Docker stack
         if: always()
