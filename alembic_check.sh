@@ -23,7 +23,7 @@ echo "=================================="
 
 # Run alembic check
 echo "Running alembic check..."
-alembic stamp head
+alembic upgrade head
 alembic check
 
 # Store the exit code
