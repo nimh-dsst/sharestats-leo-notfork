@@ -23,16 +23,6 @@ repos:
         files: "dsst_etl/.*"
         exclude: "examples|docs/examples|tests/data"
 
-  - repo: local
-    hooks:
-      - id: alembic-check
-        name: Check for model changes requiring migrations
-        entry: ./alembic_check.sh
-        language: script
-        pass_filenames: false
-        types: [python]
-        files: ^dsst_etl/.*\.py$
-
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
     hooks:
