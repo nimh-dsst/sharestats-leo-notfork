@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies for pre-commit
       run: |
         pip install --upgrade pip
-        pip install .[ci]  # Or include 'alembic' directly if needed
+        pip install .[ci]
     - uses: pre-commit/action@v3.0.1
 
   pytest:

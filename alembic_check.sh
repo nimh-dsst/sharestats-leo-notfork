@@ -12,7 +12,6 @@ else
     echo "Warning: Neither .env nor .mockenv file found!"
 fi
 
-# Show relevant database environment variables
 
 
 # Run alembic check
