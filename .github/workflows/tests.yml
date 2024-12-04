@@ -47,10 +47,14 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          alembic check
           coverage run -m pytest -s tests
           coverage report
           coverage xml
+        
+      - name: Run Alembic check
+        run: |
+          chmod +x alembic_check.sh
+          ./alembic_check.sh
 
       - name: Stop Docker stack
         if: always()
