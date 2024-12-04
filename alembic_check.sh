@@ -13,13 +13,7 @@ else
 fi
 
 # Show relevant database environment variables
-echo "=== Database Environment Variables ==="
-echo "POSTGRES_USER: ${POSTGRES_USER:-not set}"
-echo "POSTGRES_DB: ${POSTGRES_DB:-not set}"
-echo "POSTGRES_HOST: ${POSTGRES_HOST:-not set}"
-echo "POSTGRES_PORT: ${POSTGRES_PORT:-not set}"
-echo "POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-(hidden)}"
-echo "=================================="
+
 
 # Run alembic check
 echo "Running alembic check..."
