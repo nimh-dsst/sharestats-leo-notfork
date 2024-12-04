@@ -5,8 +5,9 @@ if [ -f .env ]; then
     echo "Loading variables from .env file..."
     export $(cat .env | grep -v '^#' | xargs)
 elif [ -f .mockenv ]; then
-    echo "Loading variables from .mockenv file..."
-    export $(cat .mockenv | grep -v '^#' | xargs)
+    echo "Copy values from .mockenv to .env and load them"
+    cp .mockenv .env
+    export $(cat .env | grep -v '^#' | xargs)
 else
     echo "Warning: Neither .env nor .mockenv file found!"
 fi
