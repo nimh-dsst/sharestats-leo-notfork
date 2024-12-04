@@ -27,8 +27,8 @@ repos:
     hooks:
       - id: alembic-check
         name: Check for model changes requiring migrations
-        entry: alembic check
-        language: system
+        entry: ./alembic_check.sh
+        language: script
         pass_filenames: false
         types: [python]
         files: ^dsst_etl/.*\.py$
