@@ -7,7 +7,7 @@ import boto3
 import psycopg2
 import sqlalchemy
 
-from dsst_etl import __version__, logger
+from dsst_etl import __version__, get_db_engine, logger
 from dsst_etl._utils import get_bucket_name, get_compute_context_id
 from dsst_etl.db import get_db_session
 from dsst_etl.models import Documents, Provenance, Works
@@ -188,8 +188,7 @@ def upload_directory(pdf_directory_path: str, comment: Optional[str] = None) -> 
     if not pdf_files:
         logger.warning(f"No PDF files found in {pdf_directory_path}")
         return
-
-    uploader = PDFUploader(get_db_session())
+    uploader = PDFUploader(get_db_session(get_db_engine()))
 
     # Upload PDFs
     successful_uploads, failed_uploads = uploader.upload_pdfs(pdf_files)

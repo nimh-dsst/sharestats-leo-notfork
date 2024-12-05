@@ -1,4 +1,5 @@
 import argparse
+from dsst_etl import get_db_engine
 from dsst_etl.db import get_db_session
 from dsst_etl.upload_rtransparent_data import RTransparentDataUploader  
 
@@ -9,7 +10,7 @@ def main():
     
     args = parser.parse_args()
     
-    uploader = RTransparentDataUploader(get_db_session())
+    uploader = RTransparentDataUploader(get_db_session(get_db_engine()))
     
     uploader.upload_data(args.input_file)
 
