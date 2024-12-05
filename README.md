@@ -130,6 +130,28 @@ pre-commit install
 pytest
 ```
 
+## Database Setup
+
+To set up the database for this project, follow these steps:
+
+1. **Create the Database**: 
+   - If the database does not exist, you need to create it. This can be done using a database client or command line tool specific to your database system. For example, using PostgreSQL, you might run:
+     ```bash
+     createdb your_database_name
+     ```
+
+2. **Initialize the Database Schema**:
+   - Once the database is created, you need to apply the database schema using Alembic. Run the following command to apply all migrations:
+     ```bash
+     alembic upgrade head
+     ```
+
+   - This command will apply all pending migrations and set up the database schema as defined in your Alembic migration scripts.
+
+3. **Verify the Setup**:
+   - After running the migrations, verify that the database schema is correctly set up by checking the tables and their structures.
+
+
 ## Database Migrations
 
 This project uses Alembic for database migrations. Follow the steps below to generate and apply migrations to the database.
@@ -169,3 +191,4 @@ This project uses Alembic for database migrations. Follow the steps below to gen
 - Check the Alembic logs for any error messages that might indicate what went wrong.
 
 For more detailed information on using Alembic, refer to the [Alembic documentation](https://alembic.sqlalchemy.org/en/latest/).
+

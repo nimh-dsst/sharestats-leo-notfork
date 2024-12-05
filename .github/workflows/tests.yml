@@ -47,7 +47,11 @@ jobs:
           # Wait for PostgreSQL to be ready
           timeout 20 bash -c 'until docker exec $(docker ps -q -f name=postgres) pg_isready; do sleep 1; done'
           docker ps
-        
+
+      - name: Initialize database
+        run: |
+          alembic upgrade head
+
       - name: Run Alembic check
         run: |
           chmod +x alembic_check.sh

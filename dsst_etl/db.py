@@ -1,10 +1,8 @@
 from sqlalchemy import inspect
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy_utils import create_database, database_exists
+from sqlalchemy_utils import database_exists
 
 from dsst_etl import logger
-
-from .models import Base
 
 
 def get_db_session(engine):
@@ -13,18 +11,19 @@ def get_db_session(engine):
 
 
 def init_db(engine):
-    logger.info("Initializing database")
+    logger.info("Checking database initialization")
 
     if not database_exists(engine.url):
-        logger.info("Creating database...")
-        create_database(engine.url)
-        logger.info("Database created")
+        raise RuntimeError(
+            "Database does not exist. Please create it and run Alembic migrations."
+        )
 
-    logger.info("Creating tables...")
-    Base.metadata.create_all(engine)
-    logger.info("Tables created successfully")
-
-    # Log the list of tables
+    # Check if tables exist
     inspector = inspect(engine)
     tables = inspector.get_table_names()
+    if not tables:
+        raise RuntimeError(
+            "Database schema is not initialized. Please run Alembic migrations."
+        )
+
     logger.info(f"Tables in the database: {tables}")
