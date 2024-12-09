@@ -1,5 +1,6 @@
 import argparse
 import sys
+from dsst_etl import get_db_engine
 from dsst_etl.extract import extract_data_from_pdf_dir
 from dsst_etl.transform import transform_data
 from dsst_etl.load import load_data
@@ -22,7 +23,7 @@ def main():
 
     try:
         # Initialize database session
-        db_session = get_db_session()
+        db_session = get_db_session(get_db_engine())
         logger.info({"message": "Database session initialized."})
 
         # Step 1: Extract data
