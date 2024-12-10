@@ -9,7 +9,7 @@ from sqlalchemy import (
     String,
     Text,
 )
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.sql import func
 
 naming_convention = {
@@ -34,8 +34,6 @@ class Works(Base):
     primary_document_id = Column(Integer, ForeignKey("documents.id"), nullable=True)
     provenance_id = Column(Integer, ForeignKey("provenance.id"))
 
-    oddpub_metrics = relationship("OddpubMetrics", back_populates="work")
-
 
 class Documents(Base):
     __tablename__ = "documents"
@@ -45,8 +43,6 @@ class Documents(Base):
     created_at = Column(DateTime, default=func.now())
     s3uri = Column(Text, nullable=False)
     provenance_id = Column(Integer, ForeignKey("provenance.id"))
-
-    oddpub_metrics = relationship("OddpubMetrics", back_populates="document")
 
 
 class Provenance(Base):
@@ -58,8 +54,6 @@ class Provenance(Base):
     compute = Column(Text)
     personnel = Column(Text)
     comment = Column(Text)
-
-    oddpub_metrics = relationship("OddpubMetrics", back_populates="provenance")
 
 
 class RTransparentPublication(Base):
@@ -273,16 +267,3 @@ class OddpubMetrics(Base):
     open_data_statements = Column(String)
     cas = Column(String)
     open_code_statements = Column(String)
-
-    # Foreign key relationships
-    work_id = Column(Integer, ForeignKey("works.id"), nullable=False)
-    document_id = Column(Integer, ForeignKey("documents.id"), nullable=False)
-    provenance_id = Column(Integer, ForeignKey("provenance.id"), nullable=False)
-
-    # Relationships
-    work = relationship("Works", back_populates="oddpub_metrics")
-    document = relationship("Documents", back_populates="oddpub_metrics")
-    provenance = relationship("Provenance", back_populates="oddpub_metrics")
-
-    def __repr__(self):
-        return f"<OddpubMetrics(article='{self.article}', work_id={self.work_id})>"
