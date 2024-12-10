@@ -105,7 +105,7 @@ class OddpubWrapper:
             logger.error(f"Error cleaning up output folder: {str(e)}")
             raise
 
-    def process_pdfs(self, pdf_folder: str, output_folder: str) -> OddpubMetrics:
+    def process_pdfs(self, pdf_folder: str) -> OddpubMetrics:
         """
         Process PDFs through the complete ODDPub workflow and store results in database.
 
@@ -118,6 +118,7 @@ class OddpubWrapper:
         """
         try:
             # Create output directory if it doesn't exist
+            output_folder = "oddpub_output"
             Path(output_folder).mkdir(parents=True, exist_ok=True)
 
             # Execute the workflow
@@ -129,9 +130,6 @@ class OddpubWrapper:
             self.db.add(result)
             self.db.commit()
             logger.info("Successfully stored results in database")
-
-            # Cleanup
-            self._cleanup_output_folder(output_folder)
 
             return result
         except Exception as e:

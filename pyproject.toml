@@ -27,6 +27,7 @@ dependencies = [
     "pdf2doi",
     "tqdm",
     "pypdf",
+    "rpy2"
 ]
 
 [project.optional-dependencies]
