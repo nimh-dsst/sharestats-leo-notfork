@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oddpub-api"
+version = "0.1.0"
+description = "A FastAPI application for processing PDF files with oddpub functions."
+authors = []
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.95.0"
+uvicorn = "^0.22.0"
+rpy2 = "^3.5.0"
+
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.0.0"
