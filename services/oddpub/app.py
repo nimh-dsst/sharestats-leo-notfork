@@ -74,7 +74,7 @@ class OddpubWrapper:
             )
         except Exception as e:
             logger.error(f"Error in PDF conversion: {str(e)}")
-            raise
+            raise e
 
     def _load_pdf_text(self, pdf_text_folder: str) -> robjects.vectors.ListVector:
         """Load converted PDF text using oddpub::pdf_load."""
@@ -131,12 +131,9 @@ class OddpubWrapper:
             return result
         except Exception as e:
             logger.error(f"Error in PDF processing workflow: {str(e)}")
-            self.db.rollback()
         finally:
             # Attempt cleanup even if processing failed
             self._cleanup_output_folder(output_folder)
-            if self.db:
-                self.db.close()
 
     def _convert_r_result(self, r_result) -> OddpubMetrics:
         """Convert R results to OddpubMetrics instance."""
@@ -165,15 +162,20 @@ class OddpubWrapper:
 
 
 @app.post("/oddpub")
-async def process_pdf(file: UploadFile = File(...)):
+def process_pdf(file: UploadFile = File(...)):
     # Save the uploaded file
-    file_location = f"/tmp/{file.filename}"
+    pdf_folder = "/tmp/pdfs"
+    Path(pdf_folder).mkdir(parents=True, exist_ok=True) 
+
+    file_location = f"{pdf_folder}/{file.filename}"
+    logger.info(f"Saving file to {file_location}")  
+
     with open(file_location, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
     oddpub_wrapper = OddpubWrapper()
 
-    # Call the oddpub functions
+    logger.info(f"Processing file: {file_location}")
     result = oddpub_wrapper.process_pdfs(file_location)
 
     # Clean up the saved file
