@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class OddpubWrapper:
     """
-    A wrapper class for calling ODDPub R functions from Python using rpy2.
+    Wrapper class for the ODDPub API.
     """
 
     def __init__(
