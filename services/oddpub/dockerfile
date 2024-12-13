@@ -24,5 +24,9 @@ COPY _entrypoint.sh /usr/local/bin/_entrypoint.sh
 # Make _entrypoint.sh executable
 RUN chmod +x /usr/local/bin/_entrypoint.sh
 
+# Install pdftotext
+RUN apt-get update && apt-get install -y poppler-utils
+
 ENTRYPOINT ["/usr/local/bin/_entrypoint.sh"]
+
 CMD ["fastapi", "dev", "--host", "0.0.0.0", "--port", "8071"]

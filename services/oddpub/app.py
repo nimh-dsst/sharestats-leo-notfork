@@ -12,6 +12,13 @@ from rpy2.robjects import pandas2ri
 from rpy2.robjects.packages import importr
 from dataclasses import dataclass, asdict
 
+# Configure logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler()]
+)
+
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
@@ -68,7 +75,8 @@ class OddpubWrapper:
             r_pdf_folder = robjects.StrVector([str(Path(pdf_folder))])
             r_output_folder = robjects.StrVector([str(Path(output_folder))])
 
-            self.oddpub.pdf_convert(r_pdf_folder, r_output_folder)
+            logger.info(f"Converting PDFs from {r_pdf_folder} to text in {r_output_folder}")
+            self.oddpub.pdf_convert(pdf_folder, output_folder)
             logger.info(
                 f"Successfully converted PDFs from {pdf_folder} to text in {output_folder}"
             )
@@ -79,8 +87,7 @@ class OddpubWrapper:
     def _load_pdf_text(self, pdf_text_folder: str) -> robjects.vectors.ListVector:
         """Load converted PDF text using oddpub::pdf_load."""
         try:
-            r_text_folder = robjects.StrVector([str(Path(pdf_text_folder))])
-            pdf_text_sentences = self.oddpub.pdf_load(r_text_folder)
+            pdf_text_sentences = self.oddpub.pdf_load(pdf_text_folder)
             logger.info(f"Successfully loaded PDF text from {pdf_text_folder}")
             return pdf_text_sentences
         except Exception as e:
@@ -120,10 +127,12 @@ class OddpubWrapper:
         """
         try:
             # Create output directory if it doesn't exist
-            output_folder = "oddpub_output"
+            output_folder = "oddpub_output/"
             Path(output_folder).mkdir(parents=True, exist_ok=True)
 
             # Execute the workflow
+            logger.info(f"Converting PDFs from {pdf_folder} to text in {output_folder}")
+
             self._convert_pdfs(pdf_folder, output_folder)
             pdf_text_sentences = self._load_pdf_text(output_folder)
             result = self._search_open_data(pdf_text_sentences)
@@ -163,8 +172,7 @@ class OddpubWrapper:
 
 @app.post("/oddpub")
 def process_pdf(file: UploadFile = File(...)):
-    # Save the uploaded file
-    pdf_folder = "/tmp/pdfs"
+    pdf_folder = "/tmp/pdfs/"
     Path(pdf_folder).mkdir(parents=True, exist_ok=True) 
 
     file_location = f"{pdf_folder}/{file.filename}"
@@ -175,10 +183,8 @@ def process_pdf(file: UploadFile = File(...)):
 
     oddpub_wrapper = OddpubWrapper()
 
-    logger.info(f"Processing file: {file_location}")
-    result = oddpub_wrapper.process_pdfs(file_location)
+    result = oddpub_wrapper.process_pdfs(pdf_folder)
 
-    # Clean up the saved file
     os.remove(file_location)
 
-    return JSONResponse(content=result)
+    return JSONResponse(content=result.serialize())
