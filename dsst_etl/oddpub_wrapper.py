@@ -4,8 +4,9 @@ from pathlib import Path
 import requests
 from sqlalchemy.orm import Session
 
-from .db import get_db
-from .models import OddpubMetrics
+from dsst_etl.models import OddpubMetrics
+
+from .config import config
 
 logger = logging.getLogger(__name__)
 
@@ -17,10 +18,10 @@ class OddpubWrapper:
 
     def __init__(
         self,
-        db: Session = None,
+        db_session: Session = None,
         work_id: int = None,
         document_id: int = None,
-        oddpub_host_api: str = None,
+        oddpub_host_api: str = config.ODDPUB_HOST_API,
     ):
         """
         Initialize the OddpubWrapper.
@@ -32,7 +33,7 @@ class OddpubWrapper:
         """
         try:
             self.oddpub_host_api = oddpub_host_api
-            self.db = db if db is not None else next(get_db())
+            self.db_session = db_session
             self.work_id = work_id
             self.document_id = document_id
             logger.info("Successfully initialized OddpubWrapper")
@@ -64,9 +65,9 @@ class OddpubWrapper:
                     oddpub_metrics = OddpubMetrics(**r_result)
                     oddpub_metrics.work_id = self.work_id
                     oddpub_metrics.document_id = self.document_id
-                    self.db.add(oddpub_metrics)
-                    self.db.commit()
+                    self.db_session.add(oddpub_metrics)
+                    self.db_session.commit()
 
         except Exception as e:
             logger.error(f"Error in PDF processing workflow: {str(e)}")
-            self.db.rollback()
+            self.db_session.rollback()
