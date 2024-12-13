@@ -147,7 +147,7 @@ class OddpubWrapper:
     def _convert_r_result(self, r_result) -> OddpubMetrics:
         """Convert R results to OddpubMetrics instance."""
         try:
-            df = pd.DataFrame(r_result)
+            df = pandas2ri.rpy2py(r_result)
             result_dict = df.to_dict("records")[0] if not df.empty else {}
 
             # Create new OddpubMetrics instance with relationships
