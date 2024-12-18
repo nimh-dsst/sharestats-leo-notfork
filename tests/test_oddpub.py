@@ -36,6 +36,17 @@ class TestOddpubWrapper(unittest.TestCase):
             self.session.query(OddpubMetrics).delete()
         self.session.commit()
 
+    def test_oddpub_wrapper_without_mock_api(self):
+        self.wrapper.oddpub_host_api = "http://localhost:8071"
+        self.wrapper.process_pdfs("tests/pdf-test")
+        data = self.session.query(OddpubMetrics).all()
+        self.assertEqual(len(data), 2)
+        articles = [row.article for row in data]
+        self.assertIn("test1.txt", articles)
+        self.assertIn("test2.txt", articles)
+        
+
+
     @patch("dsst_etl.oddpub_wrapper.requests.post")
     def test_process_pdfs_success(self, mock_post):
         # Mock the response from the API
