@@ -12,36 +12,17 @@ dependencies:
   - requests
   - rpy2
   - uvicorn
-  # Dependencies for rtransparent
-  - r-crul
   - r-devtools
   - r-dplyr
   - r-furrr
-  - r-future
-  - r-globals
-  - r-hoardr
-  - r-httpcode
-  - r-lazyeval
   - r-lubridate
-  - r-magrittr
-  - r-pbapply
-  #- r-pdftools
-  - r-plyr
+  - r-pdftools
   - r-purrr
-  #- r-qpdf
   - r-readr
-  # - r-rentrez
   - r-rlang
   - r-stringr
   - r-tibble
   - r-tidyr
-  - r-tidyselect
-  - r-timechange
   - r-tokenizers
-  - r-triebeard
-  - r-urltools
-  - r-utf8
-  # - r-XML
-  - r-xml2
-  - pip:
-    - metapub
+  - r-vctrs
+  - r-yaml
