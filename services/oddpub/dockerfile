@@ -3,6 +3,9 @@ SHELL ["/bin/bash", "--login", "-c"]
 # Set working directory
 WORKDIR /app
 
+# Install pdftotext
+RUN apt-get update && apt-get install -y poppler-utils
+
 COPY environment.yaml /app
 
 # Create the environment
@@ -21,9 +24,6 @@ COPY _entrypoint.sh /usr/local/bin/_entrypoint.sh
 
 # Make _entrypoint.sh executable
 RUN chmod +x /usr/local/bin/_entrypoint.sh
-
-# Install pdftotext
-RUN apt-get update && apt-get install -y poppler-utils
 
 ENTRYPOINT ["/usr/local/bin/_entrypoint.sh"]
 
