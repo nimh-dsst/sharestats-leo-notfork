@@ -13,7 +13,7 @@ services/
 ## Requirements
 
 - Python 3.11
-- Docker (optional, for containerized deployment)
+- Docker for containerized deployment
 
 ## Setup
 
@@ -23,35 +23,44 @@ services/
    cd services/oddpub
    ```
 
-2. **Install dependencies**:
-   If you are using Poetry:
-   ```bash
-   poetry install
-   ```
-
-3. **Run the application**:
-   ```bash
-   uvicorn main:app --reload
-   ```
-
-## Usage
-
-- Access the API at `http://localhost:8000/oddpub` to upload a PDF file and receive JSON output.
-
-## Docker
-
-To build and run the application using Docker:
-
-1. **Build the Docker image**:
+2. **Build the Docker image**:
    ```bash
    docker build -t oddpub-api .
    ```
 
-2. **Run the Docker container**:
+3. **Start the Docker container**:
    ```bash
-   docker run -p 80:80 oddpub-api
+   docker run -p 80:8071 -v $PWD:/app  oddpub-api
    ```
+
+## Usage
+
+Access the API at `http://localhost:80/oddpub` to upload a PDF file and receive JSON output.
+Example curl command:
+
+```bash
+curl -X POST -F "file=@/path/to/your/file.pdf" http://localhost:80/oddpub
+```
+
+Response:
+
+```json
+{
+  "article": "test1.txt",
+  "is_open_data": false,
+  "open_data_category": "",
+  "is_reuse": false,
+  "is_open_code": false,
+  "is_open_data_das": false,
+  "is_open_code_cas": false,
+  "das": null,
+  "open_data_statements": "",
+  "cas": null,
+  "open_code_statements": ""
+}
+```
 
 ## License
 
 This project is licensed under the MIT License.
+
