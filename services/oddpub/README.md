@@ -30,12 +30,12 @@ services/
 
 3. **Start the Docker container**:
    ```bash
-   docker run -p 80:8071 -v $PWD:/app  oddpub-api
+   docker run -p 8071:8071 -v $PWD:/app  oddpub-api
    ```
 
 ## Usage
 
-Access the API at `http://localhost:80/oddpub` to upload a PDF file and receive JSON output.
+Access the API at `http://localhost:8071/oddpub` to upload a PDF file and receive JSON output.
 Example curl command:
 
 ```bash
