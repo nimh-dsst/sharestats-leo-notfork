@@ -30,12 +30,9 @@ class TestRTransparentDataUploader(unittest.TestCase):
     def setUp(self):
         self.engine = get_db_engine(is_test=True)
 
-        init_db(self.engine )
+        init_db(self.engine)
         # Create a new session for each test
         self.session = get_db_session(self.engine)
-
-        # Start a transaction that we can roll back after each test
-        # self.transaction = self.session.begin()
 
         self.uploader = RTransparentDataUploader(self.session)
 
