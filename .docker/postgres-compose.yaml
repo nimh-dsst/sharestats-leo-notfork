@@ -1,5 +1,5 @@
 services:
-  postgres-dsst:
+  postgres:
     image: postgres:15
     container_name: postgres_db
     env_file: "../.env"
@@ -13,7 +13,7 @@ services:
       timeout: 5s  # Added missing timeout value
       retries: 5
 
-  oddpub-dsst:
+  oddpub:
     build:
       context: ../services/oddpub
       dockerfile: Dockerfile
